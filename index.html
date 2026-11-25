@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>《金陵双侠传》50 页漫画</title>
+<style>
+  :root { --red:#a83220; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; background:#14100c; color:#2b2320; }
+  header { background:#f5ecd8; padding:18px 14px; text-align:center; border-bottom:4px solid var(--red); }
+  header h1 { font-size:22px; letter-spacing:3px; color:var(--red); }
+  header .sub { margin-top:6px; font-size:13px; color:#6b5b3e; }
+  nav { position:sticky; top:0; z-index:50; background:#efe4c8; padding:8px; display:flex; flex-wrap:wrap; gap:6px; justify-content:center; border-bottom:2px solid #d8c9a3; }
+  nav button { font-size:12px; background:#fff8e6; color:#2b2320; border:1px solid #b9a67e; border-radius:4px; padding:5px 9px; }
+  nav button.active { background:var(--red); color:#fff; }
+  .pages { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:12px; }
+  .page { background:#f5ecd8; border-radius:8px; overflow:hidden; box-shadow:0 3px 10px rgba(0,0,0,.5); }
+  .page img { width:100%; display:block; }
+  .page .cap { padding:6px 8px; font-size:11px; color:#4a3f2a; border-top:1px solid #d8c9a3; line-height:1.45; }
+  .cap b { color:var(--red); }
+  footer { background:#f5ecd8; color:#6b5b3e; text-align:center; padding:12px; font-size:12px; border-top:4px solid var(--red); }
+  #viewer { position:fixed; inset:0; background:rgba(0,0,0,.94); display:none; z-index:99; flex-direction:column; }
+  #viewer img { flex:1; object-fit:contain; width:100%; min-height:0; }
+  #viewer .bar { display:flex; justify-content:space-between; align-items:center; padding:12px; color:#fff; background:#000; }
+  #viewer .bar span { font-size:14px; }
+  #viewer .bar button { background:var(--red); color:#fff; border:none; border-radius:4px; padding:6px 14px; font-size:14px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>金陵双侠传</h1>
+  <div class="sub">金陵城上精灵舞，贾玲家里举哑铃 · <b>50 页</b> · 武侠 × 轻喜剧</div>
+</header>
+<nav id="nav"></nav>
+<section class="pages" id="pages"></section>
+<footer>改编自短篇《金陵城上精灵舞》· 共 8 章 50 页 · 国风武侠水墨 × 日漫分镜 × 轻喜剧 Q 版<br>本页由 GitHub Pages 托管，手机浏览器直接访问即可在线阅读</footer>
+<div id="viewer" onclick="closeImg(event)">
+  <div class="bar"><span id="vTitle"></span><button onclick="closeImg(event)">关闭</button></div>
+  <img id="vImg" src="">
+</div>
+<script>
+var CHAPTERS = [["第一章 · 一碗面引发的名号", [1, 2, 3, 4, 5, 6, 7, 8, 9]], ["第二章 · 童谣是怎么唱的", [10, 11, 12, 13, 14, 15, 16, 17]], ["第三章 · 屋里举哑铃", [18]], ["第四章 · 全金陵都在演戏", [19, 20, 21, 22, 23, 24, 25, 26, 27]], ["第五章 · 藏不住的马脚", [28, 29, 30, 31, 32, 33]], ["第六章 · 真相的钟声", [34, 35, 36, 37, 38, 39, 40]], ["第七章 · 那就，不装了", [41, 42, 43, 44, 45, 46]], ["第八章 · 童谣唱到最后", [47, 48, 49, 50]]];
+var cards = ["<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p01.jpg\" alt=\"第1页\" loading=\"lazy\"><div class=\"cap\"><b>第 1 页</b> · 第一章 · 一碗面引发的名号<br>封面：金陵城全景与童谣</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p02.jpg\" alt=\"第2页\" loading=\"lazy\"><div class=\"cap\"><b>第 2 页</b> · 第一章 · 一碗面引发的名号<br>金陵晨景，一口香开门</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p03.jpg\" alt=\"第3页\" loading=\"lazy\"><div class=\"cap\"><b>第 3 页</b> · 第一章 · 一碗面引发的名号<br>端面的阿宝：单臂叠四碗</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p04.jpg\" alt=\"第4页\" loading=\"lazy\"><div class=\"cap\"><b>第 4 页</b> · 第一章 · 一碗面引发的名号<br>阿宝的人缘：街坊都爱他</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p05.jpg\" alt=\"第5页\" loading=\"lazy\"><div class=\"cap\"><b>第 5 页</b> · 第一章 · 一碗面引发的名号<br>回忆：爷爷曾是一名镖师</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p06.jpg\" alt=\"第6页\" loading=\"lazy\"><div class=\"cap\"><b>第 6 页</b> · 第一章 · 一碗面引发的名号<br>爷爷临终传下两个石哑铃</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p07.jpg\" alt=\"第7页\" loading=\"lazy\"><div class=\"cap\"><b>第 7 页</b> · 第一章 · 一碗面引发的名号<br>大雪夜，东家收养小阿宝</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p08.jpg\" alt=\"第8页\" loading=\"lazy\"><div class=\"cap\"><b>第 8 页</b> · 第一章 · 一碗面引发的名号<br>王大头踢翻馄饨摊</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p09.jpg\" alt=\"第9页\" loading=\"lazy\"><div class=\"cap\"><b>第 9 页</b> · 第一章 · 一碗面引发的名号<br>「我乃——贾玲！」名号诞生</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p10.jpg\" alt=\"第10页\" loading=\"lazy\"><div class=\"cap\"><b>第 10 页</b> · 第二章 · 童谣是怎么唱的<br>名号一夜传遍金陵城</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p11.jpg\" alt=\"第11页\" loading=\"lazy\"><div class=\"cap\"><b>第 11 页</b> · 第二章 · 童谣是怎么唱的<br>第一次夜行：手忙脚乱</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p12.jpg\" alt=\"第12页\" loading=\"lazy\"><div class=\"cap\"><b>第 12 页</b> · 第二章 · 童谣是怎么唱的<br>泰山压顶：替天行道</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p13.jpg\" alt=\"第13页\" loading=\"lazy\"><div class=\"cap\"><b>第 13 页</b> · 第二章 · 童谣是怎么唱的<br>再行侠：追回钱袋救老伯</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p14.jpg\" alt=\"第14页\" loading=\"lazy\"><div class=\"cap\"><b>第 14 页</b> · 第二章 · 童谣是怎么唱的<br>评书开讲《夜战十八匪》</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p15.jpg\" alt=\"第15页\" loading=\"lazy\"><div class=\"cap\"><b>第 15 页</b> · 第二章 · 童谣是怎么唱的<br>墙头听声：改写「举哑铃」</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p16.jpg\" alt=\"第16页\" loading=\"lazy\"><div class=\"cap\"><b>第 16 页</b> · 第二章 · 童谣是怎么唱的<br>【专属】城头精灵舞：踩碎三片瓦</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p17.jpg\" alt=\"第17页\" loading=\"lazy\"><div class=\"cap\"><b>第 17 页</b> · 第二章 · 童谣是怎么唱的<br>童谣传遍金陵，阿宝还挺得意</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p18.jpg\" alt=\"第18页\" loading=\"lazy\"><div class=\"cap\"><b>第 18 页</b> · 第三章 · 屋里举哑铃<br>【专属】月夜练功：双举石哑铃</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p19.jpg\" alt=\"第19页\" loading=\"lazy\"><div class=\"cap\"><b>第 19 页</b> · 第四章 · 全金陵都在演戏<br>三个自信：三层保险天衣无缝</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p20.jpg\" alt=\"第20页\" loading=\"lazy\"><div class=\"cap\"><b>第 20 页</b> · 第四章 · 全金陵都在演戏<br>老婆子的恩情：守了十年</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p21.jpg\" alt=\"第21页\" loading=\"lazy\"><div class=\"cap\"><b>第 21 页</b> · 第四章 · 全金陵都在演戏<br>王大头装糊涂：不敢说破</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p22.jpg\" alt=\"第22页\" loading=\"lazy\"><div class=\"cap\"><b>第 22 页</b> · 第四章 · 全金陵都在演戏<br>东家的特供蒙面布（暗纹）</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p23.jpg\" alt=\"第23页\" loading=\"lazy\"><div class=\"cap\"><b>第 23 页</b> · 第四章 · 全金陵都在演戏<br>更夫装瞎：心照不宣</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p24.jpg\" alt=\"第24页\" loading=\"lazy\"><div class=\"cap\"><b>第 24 页</b> · 第四章 · 全金陵都在演戏<br>铁匠的发现：力气比铁砧还沉</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p25.jpg\" alt=\"第25页\" loading=\"lazy\"><div class=\"cap\"><b>第 25 页</b> · 第四章 · 全金陵都在演戏<br>大夫的发现：那淤青是拳印</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p26.jpg\" alt=\"第26页\" loading=\"lazy\"><div class=\"cap\"><b>第 26 页</b> · 第四章 · 全金陵都在演戏<br>裁缝的发现：夜里干活口袋结实</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p27.jpg\" alt=\"第27页\" loading=\"lazy\"><div class=\"cap\"><b>第 27 页</b> · 第四章 · 全金陵都在演戏<br>行侠蒙太奇：街坊假装没看见</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p28.jpg\" alt=\"第28页\" loading=\"lazy\"><div class=\"cap\"><b>第 28 页</b> · 第五章 · 藏不住的马脚<br>沾沾自喜：双面人生天衣无缝</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p29.jpg\" alt=\"第29页\" loading=\"lazy\"><div class=\"cap\"><b>第 29 页</b> · 第五章 · 藏不住的马脚<br>外乡侠客摆擂台挑战贾玲</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p30.jpg\" alt=\"第30页\" loading=\"lazy\"><div class=\"cap\"><b>第 30 页</b> · 第五章 · 藏不住的马脚<br>阿宝躲了三天不敢出门</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p31.jpg\" alt=\"第31页\" loading=\"lazy\"><div class=\"cap\"><b>第 31 页</b> · 第五章 · 藏不住的马脚<br>东家下闷棍，替阿宝圆场</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p32.jpg\" alt=\"第32页\" loading=\"lazy\"><div class=\"cap\"><b>第 32 页</b> · 第五章 · 藏不住的马脚<br>感恩碑：武艺通神</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p33.jpg\" alt=\"第33页\" loading=\"lazy\"><div class=\"cap\"><b>第 33 页</b> · 第五章 · 藏不住的马脚<br>铁贲将至：乌云压顶</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p34.jpg\" alt=\"第34页\" loading=\"lazy\"><div class=\"cap\"><b>第 34 页</b> · 第六章 · 真相的钟声<br>铁贲砸店，强收安心费</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p35.jpg\" alt=\"第35页\" loading=\"lazy\"><div class=\"cap\"><b>第 35 页</b> · 第六章 · 真相的钟声<br>灶台后，阿宝双眼通红</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p36.jpg\" alt=\"第36页\" loading=\"lazy\"><div class=\"cap\"><b>第 36 页</b> · 第六章 · 真相的钟声<br>夜间备战：练了十年，就为今日</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p37.jpg\" alt=\"第37页\" loading=\"lazy\"><div class=\"cap\"><b>第 37 页</b> · 第六章 · 真相的钟声<br>夜袭客栈：一脚踩碎三片瓦</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p38.jpg\" alt=\"第38页\" loading=\"lazy\"><div class=\"cap\"><b>第 38 页</b> · 第六章 · 真相的钟声<br>摔进走廊：蒙面布滑落</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p39.jpg\" alt=\"第39页\" loading=\"lazy\"><div class=\"cap\"><b>第 39 页</b> · 第六章 · 真相的钟声<br>铁贲点破：全金陵都知道</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p40.jpg\" alt=\"第40页\" loading=\"lazy\"><div class=\"cap\"><b>第 40 页</b> · 第六章 · 真相的钟声<br>全城破梗：一直在演猴戏？</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p41.jpg\" alt=\"第41页\" loading=\"lazy\"><div class=\"cap\"><b>第 41 页</b> · 第七章 · 那就，不装了<br>铁贲金刀当头劈下</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p42.jpg\" alt=\"第42页\" loading=\"lazy\"><div class=\"cap\"><b>第 42 页</b> · 第七章 · 那就，不装了<br>东家出手：少林灶房掌过勺</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p43.jpg\" alt=\"第43页\" loading=\"lazy\"><div class=\"cap\"><b>第 43 页</b> · 第七章 · 那就，不装了<br>老婆子铁勺 + 更夫夺命梆</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p44.jpg\" alt=\"第44页\" loading=\"lazy\"><div class=\"cap\"><b>第 44 页</b> · 第七章 · 那就，不装了<br>先生点穴、铁匠、大夫、裁缝齐出</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p45.jpg\" alt=\"第45页\" loading=\"lazy\"><div class=\"cap\"><b>第 45 页</b> · 第七章 · 那就，不装了<br>街坊围拢：铁贲冒汗</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p46.jpg\" alt=\"第46页\" loading=\"lazy\"><div class=\"cap\"><b>第 46 页</b> · 第七章 · 那就，不装了<br>不装了：替天行道！</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p47.jpg\" alt=\"第47页\" loading=\"lazy\"><div class=\"cap\"><b>第 47 页</b> · 第八章 · 童谣唱到最后<br>哑铃对金刀：火星四溅</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p48.jpg\" alt=\"第48页\" loading=\"lazy\"><div class=\"cap\"><b>第 48 页</b> · 第八章 · 童谣唱到最后<br>泰山压顶：铁贲被擒</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p49.jpg\" alt=\"第49页\" loading=\"lazy\"><div class=\"cap\"><b>第 49 页</b> · 第八章 · 童谣唱到最后<br>跪碑饶命：给他下碗面</div></div>", "<div class=\"page\" onclick=\"openImg(this)\"><img src=\"imagegen/abao_p50.jpg\" alt=\"第50页\" loading=\"lazy\"><div class=\"cap\"><b>第 50 页</b> · 第八章 · 童谣唱到最后<br>尾声：童谣在金陵回荡</div></div>"];
+var pagesEl = document.getElementById('pages');
+var navEl = document.getElementById('nav');
+function render(filter){
+  pagesEl.innerHTML = '';
+  var list = [];
+  CHAPTERS.forEach(function(c){ c[1].forEach(function(p){ list.push(p); }); });
+  list.forEach(function(n){
+    if (filter && filter.indexOf(n) < 0) return;
+    pagesEl.appendChild(cards[n-1]);
+  });
+}
+CHAPTERS.forEach(function(c, i){
+  var b = document.createElement('button');
+  b.textContent = c[0];
+  b.onclick = function(){
+    var bs = document.querySelectorAll('#nav button');
+    for (var j=0;j<bs.length;j++) bs[j].classList.remove('active');
+    b.classList.add('active');
+    render(c[1]);
+    window.scrollTo(0, 0);
+  };
+  navEl.appendChild(b);
+});
+function openImg(el){
+  var img = el.querySelector('img');
+  document.getElementById('vImg').src = img.src;
+  document.getElementById('vTitle').textContent = el.querySelector('.cap b').textContent;
+  document.getElementById('viewer').style.display = 'flex';
+}
+function closeImg(e){
+  if (e) e.stopPropagation();
+  document.getElementById('viewer').style.display = 'none';
+}
+render(null);
+</script>
+</body>
+</html>
